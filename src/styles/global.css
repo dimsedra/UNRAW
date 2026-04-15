@@ -1,0 +1,80 @@
+@import './variables.css';
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    background-color: var(--obsidian);
+    color: var(--sand);
+    font-family: var(--font-narrative);
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Typography System */
+h1, h2, h3, h4, .structural-text {
+    font-family: var(--font-structure);
+    text-transform: uppercase;
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+}
+
+h1 {
+    font-size: clamp(4rem, 12vw, 12rem);
+    margin-bottom: var(--spacing-sm);
+}
+
+h2 {
+    font-size: clamp(2rem, 6vw, 6rem);
+    margin-bottom: var(--spacing-md);
+}
+
+.eyebrow {
+    font-family: var(--font-structure);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+p {
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    max-width: 65ch;
+    margin-bottom: 2rem;
+    color: var(--sand-dark);
+}
+
+.narrative-quote {
+    font-style: italic;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--sand);
+    padding-left: 0;
+    margin: var(--spacing-md) 0;
+}
+
+/* Layout & Modules */
+.container {
+    padding: 0 5vw;
+    width: 100%;
+}

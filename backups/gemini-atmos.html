@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATMOS | State Architecture</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           ATMOS CORE VARIABLES
+           ========================================= */
+        :root {
+            /* Palette: Deep, lived-in neutrals. No pure blacks/whites. */
+            --bg-void: #0d0c0b;
+            --bg-surface: #141311;
+            --bg-panel: #1a1917;
+            
+            --text-primary: #dfdbd2;
+            --text-secondary: #8c8a84;
+            --text-tertiary: #5e5c57;
+            
+            --accent-tone: #676a62; /* Oxidized sage */
+            --border-color: rgba(223, 219, 210, 0.08);
+            
+            --font-display: 'Syne', sans-serif;
+            --font-functional: 'Archivo', sans-serif;
+            
+            --ease-heavy: cubic-bezier(0.2, 0.8, 0.2, 1);
+            --ease-fluid: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* =========================================
+           RESET & FOUNDATION
+           ========================================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            cursor: default; /* Deliberate, no generic pointers unless actionable */
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            font-family: var(--font-functional);
+            font-weight: 400;
+            line-height: 1.4;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Lived-in Physicality: Grain + Ambient Light */
+        .noise-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .ambient-glow {
+            position: fixed;
+            top: -20vh;
+            right: -10vw;
+            width: 70vw;
+            height: 70vw;
+            background: radial-gradient(circle, rgba(103, 106, 98, 0.04) 0%, rgba(13, 12, 11, 0) 60%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* =========================================
+           TYPOGRAPHY & UTILITIES
+           ========================================= */
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 500;
+        }
+
+        .label-micro {
+            font-family: var(--font-functional);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+        }
+
+        .text-body {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        a, button, .interactive {
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            background: none;
+            border: none;
+            outline: none;
+        }
+
+        /* Motion Utilities */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.2s var(--ease-heavy), transform 1.2s var(--ease-heavy);
+        }
+        
+        .reveal-up.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================
+           LAYOUT ARCHITECTURE (THE GRID)
+           ========================================= */
+        .system-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            min-height: 100vh;
+        }
+
+        /* Navigation / Header */
+        .top-bar {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            background: rgba(13, 12, 11, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+
+        .top-bar .brand {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .top-bar .state-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--accent-tone);
+            box-shadow: 0 0 8px rgba(103, 106, 98, 0.4);
+        }
+
+        .top-bar .actions {
+            justify-self: end;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .action-link {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.3s var(--ease-fluid);
+        }
+        
+        .action-link:hover { color: var(--text-primary); }
+
+        /* Main Grid Structure */
+        .core-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            min-height: calc(100vh - 73px);
+        }
+
+        @media (max-width: 1024px) {
+            .core-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Left Column: Context / Audio Division */
+        .context-panel {
+            border-right: 1px solid var(--border-color);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: var(--bg-surface);
+        }
+
+        .manifesto {
+            margin-bottom: 4rem;
+        }
+
+        .manifesto h1 {
+            font-size: 2.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Audio Player (UNRAW) */
+        .audio-module {
+            border: 1px solid var(--border-color);
+            background: var(--bg-void);
+            padding: 1.5rem;
+            border-radius: 2px;
+        }
+
+        .audio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .audio-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            margin-top: 0.2rem;
+        }
+
+        .play-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s var(--ease-fluid);
+        }
+
+        .play-btn:hover {
+            border-color: var(--text-primary);
+            background: rgba(255,255,255,0.03);
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 5px 0 5px 8px;
+            border-color: transparent transparent transparent var(--text-primary);
+            margin-left: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn.playing .play-icon {
+            border-width: 0;
+            width: 10px;
+            height: 10px;
+            border-left: 3px solid var(--text-primary);
+            border-right: 3px solid var(--text-primary);
+            background: transparent;
+            margin-left: 0;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 2px;
+            background: var(--bg-panel);
+            margin-top: 1rem;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-tone);
+            transition: width 0.1s linear;
+        }
+
+        /* Right Column: Apparel Commerce Grid */
+        .commerce-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            flex-grow: 1;
+        }
+
+        /* Product Card */
+        .product-card {
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            group: product; /* Pseudo grouping for hover */
+            transition: background 0.4s var(--ease-fluid);
+        }
+
+        .product-card:hover {
+            background: var(--bg-surface);
+        }
+
+        .img-container {
+            aspect-ratio: 4/5;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-panel);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Using curated architecture/texture imagery mapped to apparel feel */
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.1) brightness(0.85);
+            transition: transform 1.5s var(--ease-heavy), filter 0.5s var(--ease-fluid);
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.03);
+            filter: grayscale(80%) contrast(1.1) brightness(1);
+        }
+
+        .product-meta {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-grow: 1;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .product-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .product-price {
+            font-family: var(--font-functional);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .product-desc {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            margin-top: 0.5rem;
+        }
+
+        .add-to-cart-btn {
+            margin-top: auto;
+            padding-top: 1.5rem;
+            font-family: var(--font-functional);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-to-cart-btn::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--border-color);
+            transition: background 0.3s ease;
+        }
+
+        .product-card:hover .add-to-cart-btn::before {
+            background: var(--accent-tone);
+        }
+
+        .add-to-cart-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* Cart Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--accent-tone);
+            padding: 1rem 1.5rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.6s var(--ease-heavy);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Architecture -->
+    <div class="noise-layer"></div>
+    <div class="ambient-glow"></div>
+
+    <div class="system-container">
+        <!-- Navigation System -->
+        <nav class="top-bar">
+            <div class="brand">ATMOS</div>
+            <div class="state-indicator">
+                <div class="status-dot"></div>
+                <span class="label-micro">State 01 : Plateau</span>
+            </div>
+            <div class="actions">
+                <button class="action-link interactive">Divisions</button>
+                <button class="action-link interactive" id="cartToggle">Acquire [ <span id="cartCount">0</span> ]</button>
+            </div>
+        </nav>
+
+        <!-- Core Infrastructure -->
+        <main class="core-grid">
+            
+            <!-- Context / Music Division -->
+            <aside class="context-panel">
+                <div class="manifesto reveal-up" style="transition-delay: 0.1s;">
+                    <div class="label-micro" style="margin-bottom: 1rem;">Operating Principle</div>
+                    <h1>Deliberate, Not Decorative.</h1>
+                    <p class="text-body">
+                        Rejecting traditional consumption cycles. Developing environments to sustain a singular, prolonged feeling. The identity evolves naturally—stripping excess until only function remains.
+                    </p>
+                </div>
+
+                <div class="audio-module reveal-up" style="transition-delay: 0.2s;">
+                    <div class="audio-header">
+                        <div>
+                            <div class="label-micro">Music Division // UNRAW</div>
+                            <div class="audio-title">Plateau Vol. 1</div>
+                        </div>
+                        <button class="play-btn interactive" id="audioToggle">
+                            <div class="play-icon"></div>
+                        </button>
+                    </div>
+                    <div class="text-body" style="font-size: 0.75rem; color: var(--text-tertiary);">
+                        Consistent atmosphere. Sustained state of being.
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="audioProgress"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Commerce / Apparel Division -->
+            <section class="commerce-panel">
+                <div class="panel-header reveal-up" style="transition-delay: 0.3s;">
+                    <div class="label-micro">Apparel Division</div>
+                    <div class="label-micro">Functional Lifestyle Systems</div>
+                </div>
+
+                <div class="product-grid">
+                    
+                    <!-- Product 1 -->
+                    <article class="product-card reveal-up" style="transition-delay: 0.4s;">
+                        <div class="img-container">
+                            <!-- Using Unsplash structural/texture images mapped to ATMOS aesthetic -->
+                            <img src="https://images.unsplash.com/photo-1603513492128-ba7eb9b3a143?q=80&w=1000&auto=format&fit=crop" alt="Structured Shell" class="product-img">
+                        </div>
+                        <div class="product-meta">
+                            <div class="product-header">
+                                <h3 class="product-title">A-01 Structured Shell</h3>
+                                <span class="product-price">₩380,000</span>
+                            </div>
+                            <p class="product-desc">Water-repellent technical canvas. Edited silhouette favoring horizontal alignment over vertical restriction.</p>
+                            <button class="add-to-cart-btn interactive" onclick="addToSystem('A-01 Structured Shell')">Integrate to System +</button>
+                        </div>
+                    </article>
+
+                    <!-- Product 2 -->
+                    <article class="product-card reveal-up" style="transition-delay: 0.5s;">
+                        <div class="img-container">
+                            <img src="https://images.unsplash.com/photo-1550246140-5119ae4790b8?q=80&w=1000&auto=format&fit=crop" alt="Utility Trousers" class="product-img">
+                        </div>
+                        <div class="product-meta">
+                            <div class="product-header">
+                                <h3 class="product-title">A-02 Utility Trousers</h3>
+                                <span class="product-price">₩240,000</span>
+                            </div>
+                            <p class="product-desc">Articulated knee seams. Neutral grey wash mapping to urban architectural concrete.</p>
+                            <button class="add-to-cart-btn interactive" onclick="addToSystem('A-02 Utility Trousers')">Integrate to System +</button>
+                        </div>
+                    </article>
+
+                    <!-- Product 3 -->
+                    <article class="product-card reveal-up" style="transition-delay: 0.6s;">
+                        <div class="img-container">
+                            <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1000&auto=format&fit=crop" alt="Seamless Base" class="product-img">
+                        </div>
+                        <div class="product-meta">
+                            <div class="product-header">
+                                <h3 class="product-title">A-03 Seamless Base</h3>
+                                <span class="product-price">₩95,000</span>
+                            </div>
+                            <p class="product-desc">Merino-blend knit. Operates as the foundation layer for the physical daily routine.</p>
+                            <button class="add-to-cart-btn interactive" onclick="addToSystem('A-03 Seamless Base')">Integrate to System +</button>
+                        </div>
+                    </article>
+
+                    <!-- Product 4 -->
+                    <article class="product-card reveal-up" style="transition-delay: 0.7s;">
+                        <div class="img-container">
+                            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000&auto=format&fit=crop" alt="Atmospheric Outerwear" class="product-img">
+                        </div>
+                        <div class="product-meta">
+                            <div class="product-header">
+                                <h3 class="product-title">A-04 Void Overcoat</h3>
+                                <span class="product-price">₩520,000</span>
+                            </div>
+                            <p class="product-desc">Heavyweight structural wool. No loud branding; identity communicated through cut and fit.</p>
+                            <button class="add-to-cart-btn interactive" onclick="addToSystem('A-04 Void Overcoat')">Integrate to System +</button>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- System Feedback Toast -->
+    <div id="systemToast" class="toast">Item integrated.</div>
+
+    <script>
+        // --- 1. Staggered Reveal Observer ---
+        // Ensures elements animate smoothly as they enter the viewport
+        document.addEventListener("DOMContentLoaded", () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-up').forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+        // --- 2. Commerce Functionality (Cart System) ---
+        let cartItems = 0;
+        const cartCountEl = document.getElementById('cartCount');
+        const toastEl = document.getElementById('systemToast');
+        let toastTimeout;
+
+        function addToSystem(itemName) {
+            cartItems++;
+            cartCountEl.textContent = cartItems;
+            
+            // Trigger feedback toast
+            toastEl.textContent = `[ ${itemName} ] Integrated.`;
+            toastEl.classList.add('show');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toastEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // --- 3. Music Division (Audio Player Simulation) ---
+        const audioBtn = document.getElementById('audioToggle');
+        const progressBar = document.getElementById('audioProgress');
+        let isPlaying = false;
+        let progressInterval;
+        let currentProgress = 0;
+
+        audioBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            
+            if (isPlaying) {
+                audioBtn.classList.add('playing');
+                // Simulate audio playing progress
+                progressInterval = setInterval(() => {
+                    currentProgress += 0.1;
+                    if (currentProgress >= 100) {
+                        currentProgress = 0;
+                        isPlaying = false;
+                        audioBtn.classList.remove('playing');
+                        clearInterval(progressInterval);
+                    }
+                    progressBar.style.width = `${currentProgress}%`;
+                }, 100);
+            } else {
+                audioBtn.classList.remove('playing');
+                clearInterval(progressInterval);
+            }
+        });
+    </script>
+</body>
+</html>

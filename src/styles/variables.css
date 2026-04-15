@@ -1,0 +1,15 @@
+:root {
+    --obsidian: #0A0A0C;
+    --obsidian-light: #161619;
+    --sand: #E4DFD8;
+    --sand-dark: #C9C4BE;
+    --slate: #52575A;
+    
+    --font-structure: 'Syne', sans-serif;
+    --font-narrative: 'Newsreader', serif;
+
+    --spacing-sm: 1.5rem;
+    --spacing-md: 4rem;
+    --spacing-lg: 8rem;
+    --spacing-xl: 12rem;
+}
