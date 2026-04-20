@@ -29,10 +29,10 @@ const MemberPanel: React.FC<MemberPanelProps> = ({ member, scrollRef }) => {
     const apertureY = useTransform(smoothProgress, [0, 0.5, 1], [40, 0, -40]);
 
     // 2. OPTICAL FOCUS: Progressive blur and contrast
-    // High-performance blur effect that resolves at center
-    const blurValue = useTransform(smoothProgress, [0, 0.3, 0.5, 0.7, 1], ["8px", "4px", "0px", "4px", "8px"]);
+    // Extreme focus window for ultra-lean screens (5% to 95% active plateau)
+    const blurValue = useTransform(smoothProgress, [0, 0.05, 0.5, 0.95, 1], ["8px", "0px", "0px", "0px", "8px"]);
     const contrastValue = useTransform(smoothProgress, [0, 0.5, 1], ["0.8", "1.1", "0.8"]);
-    const opacityValue = useTransform(smoothProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+    const opacityValue = useTransform(smoothProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0]);
 
     // 3. INTERNAL PARALLAX: Syncing with smooth progress
     const detailY = useTransform(smoothProgress, [0, 1], [150, -150]);
@@ -235,19 +235,35 @@ const MemberPanel: React.FC<MemberPanelProps> = ({ member, scrollRef }) => {
                 }
 
                 @media (max-width: 1024px) {
+                    .member-panel { 
+                        height: 250vh; /* Massive scroll buffer for high-density reading */
+                        display: block;
+                    }
                     .member-content { 
                         grid-template-columns: 1fr;
-                        height: 90vh;
-                        padding-top: 5vh;
+                        min-height: 100vh;
+                        height: auto;
+                        padding: 10vh 5vw; 
+                        position: sticky;
+                        top: 0;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
                     }
-                    .stage-zone { height: auto; margin-bottom: 2rem; }
+                    .stage-zone { height: auto; margin-bottom: 2rem; flex-shrink: 0; }
                     .atmos-container, .detail-fragment, .structural-bg-text { display: none; }
-                    .member-image-core { max-width: 320px; }
-                    .narrative-zone { padding-left: 0; }
+                    .member-image-core { max-width: 260px; margin: 0 auto 1.5rem; }
+                    .narrative-zone { padding-left: 0; text-align: center; }
+                    .member-panel h2 { font-size: 2.2rem; margin-bottom: 1rem; }
+                    .narrative-body p { font-size: 0.95rem; margin-bottom: 1.25rem; line-height: 1.5; }
                 }
 
-                @media (max-width: 768px) {
-                    .member-panel h2 { font-size: 3rem; }
+                @media (max-width: 600px) {
+                    .member-panel { height: 300vh; } /* Extreme buffer for ultra-lean phones */
+                    .member-image-core { max-width: 200px; }
+                    .member-panel h2 { font-size: 1.8rem; }
+                    .narrative-body p { font-size: 0.85rem; }
+                    .member-content { padding-top: 5vh; }
                 }
             `}</style>
         </article>

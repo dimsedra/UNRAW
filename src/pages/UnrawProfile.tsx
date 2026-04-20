@@ -4,11 +4,11 @@ import { useOutletContext } from 'react-router-dom';
 import { Hero, Manifesto, MemberPanel, ScrollProgress } from '../components';
 import { members } from '../data/members';
 
-const UnrawHome: React.FC = () => {
+const UnrawProfile: React.FC = () => {
     const { scrollRef } = useOutletContext<{ scrollRef: React.RefObject<HTMLDivElement> }>();
 
     return (
-        <main style={{ position: 'relative' }}>
+        <div className="unraw-profile-wrapper" style={{ position: 'relative' }}>
             <ScrollProgress containerRef={scrollRef} />
 
             <Hero />
@@ -18,8 +18,8 @@ const UnrawHome: React.FC = () => {
                     <MemberPanel key={member.id} member={member} scrollRef={scrollRef} />
                 ))}
             </section>
-        </main>
+        </div>
     );
 };
 
-export default UnrawHome;
+export default UnrawProfile;

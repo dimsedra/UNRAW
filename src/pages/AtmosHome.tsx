@@ -68,15 +68,15 @@ const AtmosHome: React.FC = () => {
             });
         }, observerOptions);
 
-        revealRefs.current.forEach(el => {
-            if (el) observer.observe(el);
-        });
+        // Auto-observe all reveal-up elements in the document
+        const revealElements = document.querySelectorAll('.reveal-up');
+        revealElements.forEach(el => observer.observe(el));
 
         return () => {
             window.removeEventListener('resize', handleResize);
             observer.disconnect();
         };
-    }, []);
+    }, [location.pathname]);
 
     // Scroll Lock when Overlay is Active
     useEffect(() => {
@@ -164,17 +164,15 @@ const AtmosHome: React.FC = () => {
                         <span className="label-micro">State 01 : Plateau</span>
                     </div>
                     <div className="actions">
-                        <Link to="/news" className="action-link interactive">News</Link>
-                        <Link to="/unraw" className="action-link interactive">UNRAW</Link>
-                        <Link to="/shop" className="action-link interactive">Shop</Link>
+                        <Link to="/news" className="action-link interactive" onClick={() => isMobile && setIsSidebarExpanded(false)}>News</Link>
+                        <Link to="/unraw" className="action-link interactive" onClick={() => isMobile && setIsSidebarExpanded(false)}>UNRAW</Link>
+                        <Link to="/shop" className="action-link interactive" onClick={() => isMobile && setIsSidebarExpanded(false)}>Shop</Link>
                     </div>
                 </nav>
 
                 <main className={`core-grid ${isMobile ? 'mobile-mode' : ''} ${isSidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'}`}>
                     <aside 
                         className={`context-panel ${isSidebarExpanded ? 'expanded' : ''}`}
-                        onMouseEnter={() => isMobile && setIsSidebarExpanded(true)}
-                        onMouseLeave={() => isMobile && setIsSidebarExpanded(false)}
                     >
                         {isMobile && (
                             <button 
@@ -249,7 +247,7 @@ const AtmosHome: React.FC = () => {
                         </div>
                     </aside>
 
-                    <div id="cosmos-scroll-wrapper" ref={scrollRef} style={{ flexGrow: 1, backgroundColor: 'var(--bg-void)', height: 'calc(100vh - 74px)', overflowY: 'auto', overflowX: 'hidden' }}>
+                    <div id="cosmos-scroll-wrapper" ref={scrollRef} style={{ flexGrow: 1, backgroundColor: 'var(--bg-void)', height: 'calc(100vh - var(--topbar-height))', overflowY: 'auto', overflowX: 'hidden' }}>
                         <div id="cosmos-scroll-content">
                             <Outlet context={{ 
                                 handleAddToCart, 

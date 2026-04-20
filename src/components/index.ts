@@ -7,5 +7,6 @@ export { default as Footer } from './Footer';
 export { default as NewsCard } from './NewsCard';
 export { default as ProductDetailOverlay } from './ProductDetailOverlay';
 export { default as NewsPreview } from './NewsPreview';
-export { default as ShopSearch } from './ShopSearch';
 export { default as VideoOverlay } from './VideoOverlay';
+export { default as UnrawNavbar } from './UnrawNavbar';
+export { default as ShopNavbar } from './ShopNavbar';

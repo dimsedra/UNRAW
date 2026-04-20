@@ -2,7 +2,10 @@ import React, { useState, useLayoutEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import AtmosHome from './pages/AtmosHome';
-import UnrawHome from './pages/UnrawHome';
+import UnrawLayout from './pages/UnrawLayout';
+import UnrawProfile from './pages/UnrawProfile';
+import UnrawDiscography from './pages/UnrawDiscography';
+import UnrawNews from './pages/UnrawNews';
 import Shop from './pages/Shop';
 import LandingPage from './pages/LandingPage';
 import NewsFeed from './pages/NewsFeed';
@@ -14,14 +17,13 @@ const AppLayout: React.FC = () => {
     const location = useLocation();
     const [lenis, setLenis] = useState<Lenis | null>(null);
 
+    // Initialize Lenis once
     useLayoutEffect(() => {
         const wrapper = document.getElementById('cosmos-scroll-wrapper');
         const content = document.getElementById('cosmos-scroll-content');
 
-        let lenisInstance: Lenis | null = null;
-
         if (wrapper && content) {
-            lenisInstance = new Lenis({
+            const instance = new Lenis({
                 wrapper: wrapper,
                 content: content,
                 duration: 1.5,
@@ -35,29 +37,28 @@ const AppLayout: React.FC = () => {
                 infinite: false,
             });
 
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setLenis(lenisInstance);
+            setLenis(instance);
 
             function raf(time: number) {
-                lenisInstance?.raf(time);
+                instance.raf(time);
                 requestAnimationFrame(raf);
             }
 
             requestAnimationFrame(raf);
-        }
 
-        // Global scroll reset on route change
-        if (lenisInstance) {
-            lenisInstance.scrollTo(0, { immediate: true });
-        }
-
-        return () => {
-            if (lenisInstance) {
-                lenisInstance.destroy();
+            return () => {
+                instance.destroy();
                 setLenis(null);
-            }
-        };
-    }, [location.pathname]);
+            };
+        }
+    }, []);
+
+    // Global scroll reset on route change
+    useLayoutEffect(() => {
+        if (lenis) {
+            lenis.scrollTo(0, { immediate: true });
+        }
+    }, [location.pathname, lenis]);
 
     return (
         <LenisContext.Provider value={{ lenis }}>
@@ -66,9 +67,14 @@ const AppLayout: React.FC = () => {
                     <Route path="/" element={<AtmosHome />}>
                         <Route index element={<LandingPage />} />
                         <Route path="shop" element={<Shop />} />
-                        <Route path="unraw" element={<UnrawHome />} />
+                        <Route path="unraw" element={<UnrawLayout />}>
+                            <Route index element={<UnrawProfile />} />
+                            <Route path="profile" element={<UnrawProfile />} />
+                            <Route path="discography" element={<UnrawDiscography />} />
+                            <Route path="news" element={<UnrawNews />} />
+                        </Route>
                         <Route path="news" element={<NewsFeed />} />
-                        <Route path="members/:id" element={<UnrawHome />} />
+                        <Route path="members/:id" element={<UnrawProfile />} />
                     </Route>
                 </Routes>
             </div>

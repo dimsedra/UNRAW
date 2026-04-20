@@ -15,7 +15,7 @@
     --font-functional: 'Archivo', sans-serif;
     
     --sidebar-width: 350px;
-    --sidebar-mobile-collapsed: 60px;
+    --sidebar-mobile-collapsed: 0px;
     --sidebar-mobile-expanded: 350px;
     --topbar-height: 74px;
     
@@ -116,8 +116,7 @@
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 1800px;
-    margin: 0 auto;
+    margin: 0;
     border-left: 1px solid var(--border-color);
     border-right: 1px solid var(--border-color);
     min-height: 100vh;
@@ -129,7 +128,8 @@
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
-    padding: 1.5rem 2rem;
+    height: var(--topbar-height);
+    padding: 0 2rem;
     position: sticky;
     top: 0;
     background: rgba(13, 12, 11, 0.85);
@@ -251,11 +251,11 @@
 }
 
 .atmos-root .core-grid.mobile-mode.sidebar-collapsed {
-    grid-template-columns: var(--sidebar-mobile-collapsed) 1fr;
+    grid-template-columns: 1fr;
 }
 
 .atmos-root .core-grid.mobile-mode.sidebar-expanded {
-    grid-template-columns: var(--sidebar-mobile-expanded) 1fr;
+    grid-template-columns: 1fr;
 }
 
 @media (max-width: 1024px) {
@@ -279,30 +279,53 @@
 }
 
 .atmos-root .core-grid.mobile-mode .context-panel {
-    padding: 1rem; /* Significantly reduced padding for the 60px bar */
+    position: fixed;
+    top: calc(var(--topbar-height) - 1px);
+    left: 0;
+    bottom: 0;
+    z-index: 1100;
+    width: var(--sidebar-mobile-expanded);
+    padding: 3rem 2rem;
+    transform: translateX(-100%);
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border-color);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: visible; /* Critical for trigger visibility */
 }
 
 .atmos-root .core-grid.mobile-mode .context-panel.expanded {
-    padding: 3rem 2rem; /* Restore padding when expanded */
-    width: var(--sidebar-mobile-expanded);
+    transform: translateX(0);
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
 }
 
 .atmos-root .sidebar-trigger {
     position: absolute;
     top: 1.5rem;
     right: 1rem;
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     border: 1px solid var(--border-color);
-    border-radius: 50%;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-display);
-    font-weight: 600;
+    font-family: var(--font-mono);
     color: var(--text-secondary);
     z-index: 100;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+    .atmos-root .sidebar-trigger {
+        right: auto;
+        left: calc(100% + 12px); /* Peeks correctly from the edge */
+        background: var(--bg-surface);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+    }
 }
 
 .atmos-root .sidebar-trigger:hover {
@@ -1176,7 +1199,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.6s var(--ease-heavy);
 }
 
 .atmos-root .search-island {
@@ -1188,7 +1210,6 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    transition: all 0.5s var(--ease-heavy);
     color: var(--text-primary);
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     overflow: hidden;

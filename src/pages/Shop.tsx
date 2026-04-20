@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { products } from '../data/products';
 import type { Product } from '../data/products';
-import { ProductDetailOverlay, ShopSearch } from '../components';
+import { ProductDetailOverlay, ShopNavbar } from '../components';
 import { useLenis } from '../context/LenisContext';
 import type { CartItem } from './AtmosHome';
 import '../styles/atmos.css';
@@ -12,9 +12,7 @@ const Shop: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { lenis } = useLenis();
     
-    // Search & Interaction States
     const [searchQuery, setSearchQuery] = useState('');
-    const [isSearchFloating, setIsSearchFloating] = useState(false);
     
     // Acquire the layout context function and data
     const { 
@@ -44,17 +42,6 @@ const Shop: React.FC = () => {
         }
     }, [productId, lenis, selectedProduct]); // Only trigger on initial load/change of the ID
 
-    // Scroll Detection for Dynamic Island
-    useEffect(() => {
-        if (!lenis) return;
-
-        const handleScroll = (e: { scroll: number }) => {
-            setIsSearchFloating(e.scroll > 100);
-        };
-
-        lenis.on('scroll', handleScroll);
-        return () => lenis.off('scroll', handleScroll);
-    }, [lenis]);
 
     // Instant Filtering Logic
     const filteredProducts = products.filter(product => {
@@ -130,56 +117,43 @@ const Shop: React.FC = () => {
         <section className="commerce-panel" style={{ minHeight: 'calc(100vh - 74px)', overflowX: 'hidden', position: 'relative' }}>
             <div className="panel-header grid-3 reveal-up" ref={addToRefs} style={{ transitionDelay: '0.1s' }}>
                 <div className="label-micro">Apparel Division</div>
-                
-                <ShopSearch 
-                    query={searchQuery}
-                    onQueryChange={setSearchQuery}
-                    resultsCount={filteredProducts.length}
-                    isFloating={isSearchFloating}
-                />
-
+                <div className="label-micro" style={{ textAlign: 'center', opacity: 0.5 }}>ATMOS // COLLECTION</div>
                 <div className="label-micro">Functional Lifestyle Systems</div>
             </div>
 
-            <LayoutGroup>
-                <motion.div className="product-grid" layout>
-                    {filteredProducts.map((product, idx) => (
-                        <motion.article 
-                            layout
-                            key={product.id}
-                            id={`product-${product.id}`}
-                            className="product-card reveal-up active" 
-                            ref={addToRefs} 
-                            style={{ transitionDelay: `${(idx * 0.05)}s` }}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                        >
-                            <div className="img-container interactive" onClick={() => handleProductSelect(product)}>
-                                <img src={product.img} alt={product.name} className="product-img" />
-                                <div className="view-specs-hotspot">
-                                    <span className="label-micro">Access Specs [→]</span>
-                                </div>
+            <div className="product-grid">
+                {filteredProducts.map((product, idx) => (
+                    <article 
+                        key={product.id}
+                        id={`product-${product.id}`}
+                        className="product-card reveal-up active" 
+                        ref={addToRefs} 
+                        style={{ transitionDelay: `${(idx * 0.05)}s` }}
+                    >
+                        <div className="img-container interactive" onClick={() => handleProductSelect(product)}>
+                            <img src={product.img} alt={product.name} className="product-img" />
+                            <div className="view-specs-hotspot">
+                                <span className="label-micro">Access Specs [→]</span>
                             </div>
-                            <div className="product-meta">
-                                <div className="product-header">
-                                    <h3 className="product-title interactive" onClick={() => handleProductSelect(product)}>{product.name}</h3>
-                                    <span className="product-price">{product.price}</span>
-                                </div>
-                                <p className="product-desc">{product.description}</p>
-                                <div className="product-card-actions">
-                                    <button className="add-to-cart-btn interactive" onClick={() => handleAddToCart({
-                                        id: product.id,
-                                        name: product.name,
-                                        price: product.price,
-                                        img: product.img
-                                    })}>Add to Collection</button>
-                                </div>
+                        </div>
+                        <div className="product-meta">
+                            <div className="product-header">
+                                <h3 className="product-title interactive" onClick={() => handleProductSelect(product)}>{product.name}</h3>
+                                <span className="product-price">{product.price}</span>
                             </div>
-                        </motion.article>
-                    ))}
-                </motion.div>
-            </LayoutGroup>
+                            <p className="product-desc">{product.description}</p>
+                            <div className="product-card-actions">
+                                <button className="add-to-cart-btn interactive" onClick={() => handleAddToCart({
+                                    id: product.id,
+                                    name: product.name,
+                                    price: product.price,
+                                    img: product.img
+                                })}>Add to Collection</button>
+                            </div>
+                        </div>
+                    </article>
+                ))}
+            </div>
 
             {/* Product Detail Overlay */}
 
@@ -194,28 +168,13 @@ const Shop: React.FC = () => {
                 )}
             </AnimatePresence>
 
-            {/* Floating Cart Button */}
-            <AnimatePresence>
-                <motion.button 
-                    className="floating-cart-fab"
-                    key={cartCount}
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => setIsCartOpen(true)}
-                >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                    {cartCount > 0 && (
-                        <motion.span 
-                            className="cart-badge"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                        >
-                            {cartCount}
-                        </motion.span>
-                    )}
-                </motion.button>
-            </AnimatePresence>
+            {/* Unified Shop Navigation */}
+            <ShopNavbar 
+                query={searchQuery}
+                onQueryChange={setSearchQuery}
+                onCartClick={() => setIsCartOpen(true)}
+                cartCount={cartCount}
+            />
 
             {/* Shop-Specific Cart Drawer Overlay */}
             <AnimatePresence>
@@ -279,40 +238,6 @@ const Shop: React.FC = () => {
             </AnimatePresence>
 
             <style>{`
-                .floating-cart-fab {
-                    position: fixed;
-                    bottom: 2.5rem;
-                    right: 2.5rem;
-                    width: 64px;
-                    height: 64px;
-                    background-color: #000000 !important;
-                    color: #ffffff !important;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    box-shadow: 0 10px 40px rgba(0,0,0,0.9);
-                    z-index: 9999;
-                    cursor: pointer;
-                    border: 1px solid rgba(255,255,255,0.2) !important;
-                }
-
-                .cart-badge {
-                    position: absolute;
-                    top: -5px;
-                    right: -5px;
-                    background: var(--accent-tone);
-                    color: var(--text-primary);
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 50%;
-                    font-size: 0.75rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: 600;
-                    border: 2px solid var(--bg-void);
-                }
 
                 .cart-overlay {
                     position: fixed;
