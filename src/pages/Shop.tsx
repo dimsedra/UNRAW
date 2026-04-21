@@ -143,19 +143,22 @@ const Shop: React.FC = () => {
                             </div>
                             <p className="product-desc">{product.description}</p>
                             <div className="product-card-actions">
-                                <button className="add-to-cart-btn interactive" onClick={() => handleAddToCart({
-                                    id: product.id,
-                                    name: product.name,
-                                    price: product.price,
-                                    img: product.img
-                                }) || {}}>Add to Cart</button>
+                                <button 
+                                    className="add-to-cart-btn interactive" 
+                                    onClick={() => handleAddToCart({
+                                        id: product.id,
+                                        name: product.name,
+                                        price: product.price,
+                                        img: product.img
+                                    })}
+                                >
+                                    Add to Cart
+                                </button>
                             </div>
                         </div>
                     </article>
                 ))}
             </div>
-
-            {/* Product Detail Overlay */}
 
             {/* Product Detail Overlay */}
             <AnimatePresence>
