@@ -110,7 +110,7 @@ const AtmosHome: React.FC = () => {
             return [...prev, { ...product, quantity: 1 }];
         });
         
-        setToastMessage(`[ ${product.name} ] added to your collection.`);
+        setToastMessage(`[ ${product.name} ] added to your cart.`);
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000);
     };
@@ -161,7 +161,8 @@ const AtmosHome: React.FC = () => {
                     <Link to="/" className="brand interactive">ATMOS</Link>
                     <div className="state-indicator">
                         <div className="status-dot"></div>
-                        <span className="label-micro">State 01 : Plateau</span>
+                        <span className="label-micro">Current Phase</span>
+                        <span className="label-micro" style={{ opacity: 0.4 }}>01 : Release A</span>
                     </div>
                     <div className="actions">
                         <Link to="/news" className="action-link interactive" onClick={() => isMobile && setIsSidebarExpanded(false)}>News</Link>
@@ -187,10 +188,10 @@ const AtmosHome: React.FC = () => {
                         )}
                         <div className="sidebar-content-wrapper" style={{ opacity: (!isMobile || isSidebarExpanded) ? 1 : 0, transition: 'opacity 0.3s' }}>
                             <div className="manifesto reveal-up" ref={addToRefs} style={{ transitionDelay: '0.1s' }}>
-                                <div className="label-micro" style={{ marginBottom: '1rem' }}>Operating Principle</div>
-                                <h1>Deliberate, Not Decorative.</h1>
+                                <div className="label-micro" style={{ marginBottom: '1rem' }}>Our Vision</div>
+                                <h1>Purposeful Design.</h1>
                                 <p className="text-body">
-                                    Rejecting traditional consumption cycles. Developing environments to sustain a singular, prolonged feeling. The identity evolves naturally—stripping excess until only function remains.
+                                    We create products with deliberate intent—stripping away the unnecessary to focus on essential utility and performance.
                                 </p>
                             </div>
 
@@ -198,7 +199,7 @@ const AtmosHome: React.FC = () => {
                                 <div className="audio-header">
                                     <div style={{ flexGrow: 1, minWidth: 0 }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                                            <div className="label-micro">Music Division // VISUALS</div>
+                                            <div className="label-micro">ATMOS // VISUALS</div>
                                             <button className={`play-btn-minimal interactive ${isPlaying ? 'active' : ''}`} onClick={toggleVisuals}>
                                                 {isPlaying ? (
                                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>

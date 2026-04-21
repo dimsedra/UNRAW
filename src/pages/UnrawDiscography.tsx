@@ -8,13 +8,13 @@ const UnrawDiscography: React.FC = () => {
             <div className="system-container">
                 <div className="archive-header reveal-up">
                     <div className="header-meta">
-                        <span className="label-micro">SYSTEM STATE : ARCHIVE</span>
+                        <span className="label-micro">The Archive</span>
                         <span className="label-micro" style={{ opacity: 0.4 }}>INDEX: AU-LOG-01</span>
                     </div>
-                    <h2 className="display-title">AUDIO ARCHIVE</h2>
+                    <h2 className="display-title">Discography</h2>
                     <p className="header-summary">
-                        A chronological record of atmospheric deployments and structural audio states. 
-                        Each entry represents a discrete evolution in the UNRAW sonic identity.
+                        A complete record of our musical releases. 
+                        Exploring the evolution of the UNRAW sound.
                     </p>
                 </div>
 
@@ -49,7 +49,7 @@ const UnrawDiscography: React.FC = () => {
                                 
                                 <div className="technical-specs">
                                     <div className="spec-item">
-                                        <span className="spec-label">RUNTIME</span>
+                                        <span className="spec-label">Duration</span>
                                         <span className="spec-value">{release.duration}</span>
                                     </div>
                                     <div className="spec-item">
@@ -61,7 +61,7 @@ const UnrawDiscography: React.FC = () => {
                                         <span className="spec-value">{release.bitrate}</span>
                                     </div>
                                     <div className="spec-item">
-                                        <span className="spec-label">VER</span>
+                                        <span className="spec-label">Version</span>
                                         <span className="spec-value">{release.version}</span>
                                     </div>
                                 </div>
@@ -69,7 +69,7 @@ const UnrawDiscography: React.FC = () => {
                                 <p className="release-description">{release.description}</p>
 
                                 <div className="track-index">
-                                    <div className="label-micro" style={{ marginBottom: '1rem', borderBottom: '1px solid rgba(223, 219, 210, 0.1)', paddingBottom: '0.5rem' }}>Sequence Data</div>
+                                    <div className="label-micro" style={{ marginBottom: '1rem', borderBottom: '1px solid rgba(223, 219, 210, 0.1)', paddingBottom: '0.5rem' }}>Tracklist</div>
                                     {release.tracks.map((track, i) => (
                                         <div key={i} className="track-row">
                                             <span className="track-no">{(i + 1).toString().padStart(2, '0')}</span>

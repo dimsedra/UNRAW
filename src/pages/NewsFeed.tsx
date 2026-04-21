@@ -50,8 +50,8 @@ const NewsFeed: React.FC = () => {
     return (
         <section className="news-panel">
             <header className="news-header reveal-up" ref={addToRefs}>
-                <div className="label-micro text-secondary">Press / Documentation</div>
-                <h1 className="news-main-title">System Updates & Narratives</h1>
+                <div className="label-micro text-secondary">Latest News</div>
+                <h1 className="news-main-title">News & Stories</h1>
             </header>
 
             <div className="editorial-container">
@@ -65,7 +65,7 @@ const NewsFeed: React.FC = () => {
                 <div className="news-events-split">
                     {/* News Feed */}
                     <div className="news-feed">
-                        <div className="section-label label-micro reveal-up" ref={addToRefs}>Latest Reports</div>
+                        <div className="section-label label-micro reveal-up" ref={addToRefs}>Recent News</div>
                         <div className="standard-grid">
                             {standardArticles.map((article, idx) => (
                                 <div key={article.id} className="reveal-up" ref={addToRefs} style={{ transitionDelay: `${0.3 + (idx * 0.1)}s` }}>
@@ -77,7 +77,7 @@ const NewsFeed: React.FC = () => {
 
                     {/* Events Sidebar */}
                     <aside className="events-column">
-                        <div className="section-label label-micro reveal-up" ref={addToRefs}>Scheduled Encounters</div>
+                        <div className="section-label label-micro reveal-up" ref={addToRefs}>Upcoming Events</div>
                         <div className="events-list">
                             {events.map((event, idx) => (
                                 <div key={event.id} className="event-item reveal-up" ref={addToRefs} style={{ transitionDelay: `${0.4 + (idx * 0.1)}s` }}>
@@ -92,8 +92,8 @@ const NewsFeed: React.FC = () => {
                         </div>
 
                         <div className="status-box reveal-up" ref={addToRefs} style={{ transitionDelay: '0.6s' }}>
-                            <div className="label-micro">System Connectivity</div>
-                            <p>All nodes operating within expected parameters. Continuous integration active.</p>
+                            <div className="label-micro">System Status</div>
+                            <p>Our systems are live and evolving. Stay tuned for the next release.</p>
                         </div>
                     </aside>
                 </div>

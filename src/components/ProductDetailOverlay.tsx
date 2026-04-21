@@ -66,7 +66,7 @@ const ProductDetailOverlay: React.FC<ProductDetailOverlayProps> = ({ product, on
                         </div>
 
                         <div className="tech-specs">
-                            <div className="label-micro">Technical Dossier</div>
+                            <div className="label-micro">Technical Details</div>
                             <ul>
                                 {product.specs.map((spec, idx) => (
                                     <li key={idx}>[ {spec} ]</li>
@@ -76,15 +76,15 @@ const ProductDetailOverlay: React.FC<ProductDetailOverlayProps> = ({ product, on
 
                         <div className="material-details">
                             <div className="detail-item">
-                                <span className="label-micro">Fabrication</span>
+                                <span className="label-micro">Material</span>
                                 <p>{product.details.material}</p>
                             </div>
                             <div className="detail-item">
-                                <span className="label-micro">Fit Profile</span>
+                                <span className="label-micro">Fit</span>
                                 <p>{product.details.fit}</p>
                             </div>
                             <div className="detail-item">
-                                <span className="label-micro">System Care</span>
+                                <span className="label-micro">Care Instructions</span>
                                 <p>{product.details.care}</p>
                             </div>
                         </div>
@@ -101,7 +101,7 @@ const ProductDetailOverlay: React.FC<ProductDetailOverlayProps> = ({ product, on
                                     });
                                 }}
                             >
-                                Initiate Alignment [Add to Cart]
+                                Add to Cart
                             </button>
                         </footer>
                     </div>

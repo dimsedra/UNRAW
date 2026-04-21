@@ -42,7 +42,7 @@ const NewsPreview: React.FC = () => {
             <div className="editorial-grid">
                 {/* Left/Hero Zone: Featured Narrative */}
                 <div className="headline-zone reveal-up" ref={addToRefs}>
-                    <div className="label-micro text-secondary">Documentation // Latest</div>
+                    <div className="label-micro">Latest Stories</div>
                     <Link to="/news" className="featured-card interactive">
                         <div className="card-visual">
                             <img src={featured.img} alt={featured.title} />
@@ -59,7 +59,7 @@ const NewsPreview: React.FC = () => {
                 {/* Right/System Zone: Events & Navigation */}
                 <div className="system-zone">
                     <div className="events-dossier reveal-up" ref={addToRefs} style={{ transitionDelay: '0.2s' }}>
-                        <div className="label-micro dossier-label">Scheduled Encounters</div>
+                        <div className="label-micro dossier-label">Upcoming Events</div>
                         <div className="mini-events-list">
                             {latestEvents.map((event) => (
                                 <div key={event.id} className="mini-event-item">

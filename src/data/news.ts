@@ -22,9 +22,9 @@ export const newsArticles: NewsArticle[] = [
         id: 'news-01',
         date: '2026.04.12',
         category: 'RELEASE',
-        title: 'Capsule A: Tactical Utility Deployment',
-        excerpt: 'Exploring the architectural boundaries of the new Capsule A collection, where performance meets brutalist minimalism.',
-        content: 'The launch of Capsule A marks a significant milestone in the ATMOS ecosystem. Each piece is designed with deliberate intent, stripping away the decorative to reveal raw technical function. From the Tactical Street Cargos to the Racing Shield Windbreaker, the collection embodies our operating principle of being "Deliberate, Not Decorative."',
+        title: 'Collection A: Modern Utility Pack',
+        excerpt: 'Introducing the new Collection A, where functional design meets modern minimalism.',
+        content: 'The launch of Collection A marks a significant milestone for ATMOS. Each piece is designed with purpose, stripping away the unnecessary to focus on essential utility and performance. From the Tactical Street Cargos to the Racing Shield Windbreaker, the collection embodies our goal: purposeful design for the modern environment.',
         img: '/assets/members/danielle/Capsule-A-Danielle.jpg',
         isFeatured: true
     },
@@ -32,18 +32,18 @@ export const newsArticles: NewsArticle[] = [
         id: 'news-02',
         date: '2026.04.08',
         category: 'SYSTEM',
-        title: 'Plateau Vol. 1: Atmospheric Integration',
-        excerpt: 'UNRAW initiates the first phase of digital audio state integration with the release of Plateau Vol. 1.',
-        content: 'Plateau Vol. 1 is more than an album; it is a sustained state of being. Developed to maintain a consistent atmosphere across high-fidelity environments, the project serves as the sonic foundation for the UNRAW creative cycle.',
+        title: 'New Release: Plateau Vol. 1',
+        excerpt: 'UNRAW presents the first volume of Plateau, an exploration of cinematic soundscapes.',
+        content: 'Plateau Vol. 1 is more than just music; it’s an immersive experience. Designed to create a consistent mood across any listening environment, this project serves as the foundational sound for the UNRAW creative series.',
         img: '/assets/members/natty/natty-unraw-profile-3.jpg'
     },
     {
         id: 'news-03',
         date: '2026.04.05',
         category: 'MANIFESTO',
-        title: 'On the Necessity of Absence',
-        excerpt: 'A deep dive into the philosophy of stripping excess until only the core function remains.',
-        content: 'In an era of digital noise, ATMOS advocates for the necessity of absence. By removing the unnecessary, we create space for focus, for presence, and for the deliberate evolution of identity.',
+        title: 'The Beauty of Simplicity',
+        excerpt: 'Exploring our philosophy of removing the excess to focus on what truly matters.',
+        content: 'In a world of constant noise, ATMOS advocates for the power of simplification. By removing the unnecessary, we create space for focus and the deliberate evolution of style.',
         img: '/assets/members/yujin/yujin-atmos-philosophy.jpg'
     }
 ];
@@ -52,14 +52,14 @@ export const events: EventItem[] = [
     {
         id: 'event-01',
         date: '2026.05.01',
-        title: 'Capsule A Pop-up Residency',
+        title: 'Collection A Pop-up Store',
         location: 'Seoul // Seongsu Base',
         type: 'PHYSICAL'
     },
     {
         id: 'event-02',
         date: '2026.05.15',
-        title: 'System State 02: Launch Event',
+        title: 'Release Event: Phase 02',
         location: 'Global // Digital Stream',
         type: 'DIGITAL'
     }

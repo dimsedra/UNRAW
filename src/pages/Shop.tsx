@@ -116,9 +116,9 @@ const Shop: React.FC = () => {
     return (
         <section className="commerce-panel" style={{ minHeight: 'calc(100vh - 74px)', overflowX: 'hidden', position: 'relative' }}>
             <div className="panel-header grid-3 reveal-up" ref={addToRefs} style={{ transitionDelay: '0.1s' }}>
-                <div className="label-micro">Apparel Division</div>
+                <div className="label-micro">Apparel</div>
                 <div className="label-micro" style={{ textAlign: 'center', opacity: 0.5 }}>ATMOS // COLLECTION</div>
-                <div className="label-micro">Functional Lifestyle Systems</div>
+                <div className="label-micro">Technical Essentials</div>
             </div>
 
             <div className="product-grid">
@@ -133,7 +133,7 @@ const Shop: React.FC = () => {
                         <div className="img-container interactive" onClick={() => handleProductSelect(product)}>
                             <img src={product.img} alt={product.name} className="product-img" />
                             <div className="view-specs-hotspot">
-                                <span className="label-micro">Access Specs [→]</span>
+                                <span className="label-micro">View Details [→]</span>
                             </div>
                         </div>
                         <div className="product-meta">
@@ -148,7 +148,7 @@ const Shop: React.FC = () => {
                                     name: product.name,
                                     price: product.price,
                                     img: product.img
-                                })}>Add to Collection</button>
+                                }) || {}}>Add to Cart</button>
                             </div>
                         </div>
                     </article>
@@ -195,13 +195,13 @@ const Shop: React.FC = () => {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="drawer-header">
-                                <h2 className="label-micro">Cart / Inventory</h2>
+                                <h2 className="label-micro">Your Cart</h2>
                                 <button className="interactive" onClick={() => setIsCartOpen(false)}>Close [X]</button>
                             </div>
 
                             <div className="drawer-content">
                                 {cartItems.length === 0 ? (
-                                    <div className="empty-cart-msg">Your collection is currently empty.</div>
+                                    <div className="empty-cart-msg">Your cart is currently empty.</div>
                                 ) : (
                                     cartItems.map(item => (
                                         <div key={item.id} className="cart-item">
@@ -229,7 +229,7 @@ const Shop: React.FC = () => {
                                         <span>Subtotal</span>
                                         <span>₩{subtotal.toLocaleString()}</span>
                                     </div>
-                                    <button className="checkout-btn interactive">Initiate Checkout</button>
+                                    <button className="checkout-btn interactive">Checkout</button>
                                 </div>
                             )}
                         </motion.aside>

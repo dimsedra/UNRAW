@@ -21,7 +21,7 @@ export const unrawDiscography: Release[] = [
     year: '2026',
     type: 'ALBUM',
     coverImg: '/assets/members/natty/natty-unraw-profile-3.jpg',
-    description: 'A sustained state of being. The sonic foundation for the UNRAW creative cycle, designed to maintain a consistent atmosphere across high-fidelity environments.',
+    description: 'An immersive sonic journey. Plateau Vol. 1 serves as the foundational sound for the UNRAW universe, blending atmospheric pads with driving rhythms.',
     tracks: [
       'Void Entrance',
       'Atmospheric Drift',
@@ -44,7 +44,7 @@ export const unrawDiscography: Release[] = [
     year: '2025',
     type: 'EP',
     coverImg: '/assets/members/yujin/yujin-unraw-profile-2.jpg',
-    description: 'Initial architectural audio deployment exploring the intersection of industrial texture and harmonic clarity.',
+    description: 'Our debut EP, exploring the intersection of industrial textures and melodic clarity.',
     tracks: [
       'Initialization',
       'Protocol Beta',
@@ -63,7 +63,7 @@ export const unrawDiscography: Release[] = [
     year: '2025',
     type: 'SINGLE',
     coverImg: '/assets/members/danielle/danielle-unraw-profile-3.jpg',
-    description: 'A manifesto in audio form. Stripping away the excess until only the core function remains.',
+    description: 'A musical statement on minimalism. Stripping away the excess to find the core message of the song.',
     tracks: [
       'Deliberate (Original Mix)',
       'Decorative (Absence Mix)'

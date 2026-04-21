@@ -6,12 +6,12 @@ const Footer: React.FC = () => {
     return (
         <footer className="page-footer">
             <div className="footer-brand">
-                ATMOS / SYSTEM
+                ATMOS
             </div>
             
             <div className="system-credits">
                 <div className="label-micro">Project Status</div>
-                <span>Phase 01-A // Continuous Integration</span>
+                <span>Version 1.0.4</span>
                 <div style={{ marginTop: '0.5rem', opacity: 0.5 }}>© {currentYear} Atmos. All rights reserved.</div>
             </div>
 
